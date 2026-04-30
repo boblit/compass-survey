@@ -2,7 +2,7 @@
   "name": "Compass Survey",
   "short_name": "Compass",
   "description": "Professional relocation survey tool by Compass Relocations",
-  "start_url": "/index.html",
+ "start_url": "https://compass-relocations.github.io/compass-survey/index.html",
   "display": "standalone",
   "background_color": "#0f0f0f",
   "theme_color": "#A6192E",
