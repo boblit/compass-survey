@@ -775,6 +775,16 @@ label { font-size: 12px; color: var(--gray-mid); display: block; margin-bottom: 
       <div class="sec">Rooms & spaces</div>
       <div class="card" id="room-list"></div>
       <button class="btn btn-block" style="margin-top:4px;" onclick="openRoomSheet(null)">+ Add room or space</button>
+
+      <!-- Room photo strip -->
+      <div id="rooms-photo-section" style="display:none;">
+        <div class="sec" style="margin-top:12px;">Photos <span id="rooms-photo-room-label" style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--gray-mid);font-size:11px;"></span></div>
+        <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;" id="rooms-photo-strip">
+          <div class="ptree-add-wide" onclick="openCameraFor('room')" style="flex-shrink:0;">
+            <span style="font-size:22px;">📷</span><span>Add photo</span>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- COLLECTIONS -->
@@ -787,6 +797,16 @@ label { font-size: 12px; color: var(--gray-mid); display: block; margin-bottom: 
       <div class="sec">Named collections</div>
       <div id="collections-list"></div>
       <button class="btn btn-block" style="margin-top:4px;" onclick="openRoomSheet(null, true)">+ Add named collection</button>
+
+      <!-- Collection photo strip -->
+      <div id="collections-photo-section" style="display:none;">
+        <div class="sec" style="margin-top:12px;">Photos <span id="collections-photo-label" style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--gray-mid);font-size:11px;"></span></div>
+        <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;" id="collections-photo-strip">
+          <div class="ptree-add-wide" onclick="openCameraFor('collection')" style="flex-shrink:0;">
+            <span style="font-size:22px;">📷</span><span>Add photo</span>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- ROOM / COLLECTION SHEET -->
@@ -797,9 +817,17 @@ label { font-size: 12px; color: var(--gray-mid); display: block; margin-bottom: 
         <button onclick="closeRoomSheet()" style="background:var(--gray-pale);border:none;border-radius:50%;width:30px;height:30px;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--gray-dark);">✕</button>
       </div>
       <div style="padding:0 16px;">
+
+        <!-- Preset picker -->
+        <div style="margin-bottom:14px;">
+          <div class="sec" style="margin:0 0 8px;" id="rs-preset-label">Choose a room</div>
+          <div id="rs-preset-chips" style="display:flex;flex-wrap:wrap;gap:6px;max-height:160px;overflow-y:auto;padding-bottom:4px;"></div>
+        </div>
+
+        <!-- Custom name -->
         <div class="form-group" style="margin-bottom:14px;">
-          <label>Name</label>
-          <input type="text" id="rs-name" placeholder="e.g. Bob's painting room, Master bedroom…" autocomplete="off">
+          <label>Or type a custom name</label>
+          <input type="text" id="rs-name" placeholder="e.g. Bob's painting room…" autocomplete="off" oninput="onRsNameInput(this.value)">
         </div>
 
         <!-- Type toggle -->
@@ -887,6 +915,16 @@ label { font-size: 12px; color: var(--gray-mid); display: block; margin-bottom: 
       <div class="sec">Item catalogue</div>
       <div id="items-list"></div>
       <button class="btn btn-primary btn-block" style="margin-top:4px;" onclick="openAddItem()">+ Add item</button>
+
+      <!-- Items photo strip -->
+      <div style="margin-top:4px;">
+        <div class="sec" style="margin-top:12px;">Room photos</div>
+        <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;" id="items-photo-strip">
+          <div class="ptree-add-wide" onclick="openCameraFor('items')" style="flex-shrink:0;">
+            <span style="font-size:22px;">📷</span><span>Add photo</span>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- ADD/EDIT ITEM SHEET -->
@@ -1205,6 +1243,16 @@ label { font-size: 12px; color: var(--gray-mid); display: block; margin-bottom: 
         </div>
       </div>
 
+      <div class="sec">Room & collection presets</div>
+      <div class="card" style="padding:14px;">
+        <div style="font-size:12px;color:var(--gray-mid);margin-bottom:12px;line-height:1.5;">Toggle presets off to hide them from the picker. Delete removes permanently. Custom names you've used are added automatically.</div>
+        <div style="font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.08em;color:var(--gray-mid);margin-bottom:8px;">Rooms</div>
+        <div id="preset-rooms-list" style="margin-bottom:16px;"></div>
+        <div style="font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.08em;color:var(--gray-mid);margin-bottom:8px;">Collections</div>
+        <div id="preset-collections-list"></div>
+        <button class="btn btn-block" style="margin-top:12px;" onclick="resetPresets()">Reset to defaults</button>
+      </div>
+
       <div class="sec">About</div>
       <div class="card" style="padding:14px;">
         <div style="font-size:13px;color:var(--gray-mid);line-height:1.6;">
@@ -1255,6 +1303,89 @@ function save() {
     localStorage.setItem('compass_job_id', STATE.currentJob || '');
     localStorage.setItem('compass_api_key', STATE.apiKey);
   } catch(e) {}
+}
+
+// ── PRESET LIBRARY ──
+const DEFAULT_ROOM_PRESETS = [
+  'Master Bedroom','Bedroom 2','Bedroom 3','Bedroom 4',
+  'Lounge','Dining Room','Kitchen','Bathroom','Ensuite',
+  'Laundry','Garage','Garden Shed','Study','Hall','Loft / Attic','Sunroom','Utility Room'
+];
+const DEFAULT_COLLECTION_PRESETS = [
+  'Artwork','Porcelain / Ceramics','Books','Wine','Garden / Outdoor',
+  'Tools','Clothing','Antiques','Electronics','Sporting Equipment',
+  'Musical Instruments','Jewellery / Valuables','Documents / Files'
+];
+
+function loadPresets() {
+  try {
+    const stored = localStorage.getItem('compass_presets');
+    if (stored) return JSON.parse(stored);
+  } catch(e) {}
+  // First run — build defaults
+  const presets = {
+    rooms: DEFAULT_ROOM_PRESETS.map(n => ({ name: n, enabled: true, custom: false })),
+    collections: DEFAULT_COLLECTION_PRESETS.map(n => ({ name: n, enabled: true, custom: false }))
+  };
+  savePresets(presets);
+  return presets;
+}
+
+function savePresets(presets) {
+  try { localStorage.setItem('compass_presets', JSON.stringify(presets)); } catch(e) {}
+}
+
+function getPresets() {
+  if (!window._presets) window._presets = loadPresets();
+  return window._presets;
+}
+
+function addCustomPreset(name, type) {
+  const p = getPresets();
+  const list = p[type];
+  if (!list.find(x => x.name.toLowerCase() === name.toLowerCase())) {
+    list.push({ name, enabled: true, custom: true });
+    savePresets(p);
+  }
+}
+
+function resetPresets() {
+  if (!confirm('Reset all presets to defaults? Your custom names will be removed.')) return;
+  window._presets = null;
+  localStorage.removeItem('compass_presets');
+  renderSettingsPresets();
+  toast('Presets reset to defaults');
+}
+
+function renderSettingsPresets() {
+  const p = getPresets();
+  ['rooms','collections'].forEach(type => {
+    const el = document.getElementById(`preset-${type}-list`);
+    if (!el) return;
+    el.innerHTML = p[type].map((item, i) => `
+      <div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:0.5px solid rgba(0,0,0,0.05);">
+        <button onclick="togglePreset('${type}',${i})" style="background:${item.enabled ? 'var(--red)' : 'var(--gray-light)'};border:none;border-radius:10px;width:32px;height:18px;cursor:pointer;transition:background 0.15s;flex-shrink:0;"></button>
+        <span style="flex:1;font-size:13px;color:${item.enabled ? 'var(--charcoal)' : 'var(--gray-mid)'};">${item.name}${item.custom ? ' <span style="font-size:10px;color:var(--gray-mid);">(custom)</span>' : ''}</span>
+        <button onclick="deletePreset('${type}',${i})" style="background:none;border:none;color:var(--gray-mid);font-size:16px;cursor:pointer;padding:0 4px;line-height:1;">×</button>
+      </div>`).join('');
+  });
+}
+
+function togglePreset(type, i) {
+  const p = getPresets();
+  p[type][i].enabled = !p[type][i].enabled;
+  savePresets(p);
+  renderSettingsPresets();
+}
+
+function deletePreset(type, i) {
+  const p = getPresets();
+  const name = p[type][i].name;
+  if (!confirm(`Delete "${name}"?`)) return;
+  p[type].splice(i, 1);
+  savePresets(p);
+  renderSettingsPresets();
+  toast(`"${name}" deleted`);
 }
 
 function load() {
@@ -1317,6 +1448,7 @@ document.querySelectorAll('.tab').forEach(t => {
     if (t.dataset.tab === 'photos') renderPhotoSelects();
     if (t.dataset.tab === 'handling') renderHandling();
     if (t.dataset.tab === 'items') renderItemsScreen();
+    if (t.dataset.tab === 'settings') renderSettingsPresets();
   });
 });
 
@@ -1449,10 +1581,37 @@ function renderRooms() {
     <span class="row-icon" style="color:var(--gray-mid)">＋</span>
     <div class="row-body"><div class="row-title" style="color:var(--gray-mid)">Add room or space</div></div>
   </div>`;
+  renderRoomPhotoStrip();
 }
 
 // ── ROOM SHEET ──
 const RS = { editIdx: null };
+
+function renderRsPresets(isCol) {
+  const p = getPresets();
+  const list = isCol ? p.collections : p.rooms;
+  const container = document.getElementById('rs-preset-chips');
+  const label = document.getElementById('rs-preset-label');
+  label.textContent = isCol ? 'Choose a collection type' : 'Choose a room';
+  const active = list.filter(x => x.enabled);
+  container.innerHTML = active.map(item => `
+    <button class="attr-chip" data-preset="${item.name}" onclick="selectRsPreset(this,'${item.name.replace(/'/g,"\\'")}')">
+      ${item.name}
+    </button>`).join('');
+}
+
+function selectRsPreset(el, name) {
+  document.querySelectorAll('#rs-preset-chips .attr-chip').forEach(b => b.classList.remove('on'));
+  el.classList.add('on');
+  document.getElementById('rs-name').value = name;
+}
+
+function onRsNameInput(val) {
+  // Deselect preset chip if user types a custom name
+  document.querySelectorAll('#rs-preset-chips .attr-chip').forEach(b => {
+    b.classList.toggle('on', b.dataset.preset === val);
+  });
+}
 
 function openRoomSheet(idx, forceCollection) {
   ensureJob();
@@ -1460,34 +1619,44 @@ function openRoomSheet(idx, forceCollection) {
   const job = getJob();
   const room = idx !== null ? job.rooms[idx] : null;
 
-  // Reset
-  document.getElementById('rs-name').value = room ? room.name : '';
+  const isCol = room ? !!room.isCollection : !!forceCollection;
+
+  // Render presets for the right type
+  renderRsPresets(isCol);
+
+  // Reset name
+  const name = room ? room.name : '';
+  document.getElementById('rs-name').value = name;
   document.getElementById('rs-notes').value = room ? (room.notes||'') : '';
   document.getElementById('rs-title').textContent = room ? 'Edit' : (forceCollection ? 'Add collection' : 'Add room');
 
-  const isCol = room ? !!room.isCollection : !!forceCollection;
+  // Highlight matching preset if editing
+  if (name) {
+    document.querySelectorAll('#rs-preset-chips .attr-chip').forEach(b => {
+      b.classList.toggle('on', b.dataset.preset === name);
+    });
+  }
+
   const tog = document.getElementById('rs-is-collection');
   tog.classList.toggle('on', isCol);
   toggleRsType();
 
-  // Status chips
   const st = room?.status || 'pending';
   document.querySelectorAll('#rs-status-chips .chip').forEach(c => c.classList.toggle('on', c.dataset.st === st));
 
-  // Colour dots
   const col = room?.collectionColour || '#A6192E';
   document.querySelectorAll('#rs-colour-chips .col-dot').forEach(d => d.classList.toggle('on', d.dataset.col === col));
 
   document.getElementById('rs-delete-btn').style.display = room ? 'flex' : 'none';
   document.getElementById('room-sheet-backdrop').style.display = 'block';
   document.getElementById('room-sheet').style.display = 'block';
-  setTimeout(() => document.getElementById('rs-name').focus(), 80);
 }
 
 function toggleRsType() {
   const isCol = document.getElementById('rs-is-collection').classList.contains('on');
   document.getElementById('rs-status-wrap').style.display = isCol ? 'none' : 'block';
   document.getElementById('rs-colour-wrap').style.display = isCol ? 'block' : 'none';
+  renderRsPresets(isCol);
 }
 
 function closeRoomSheet() {
@@ -1506,8 +1675,12 @@ function saveRoomSheet() {
   const isCol = document.getElementById('rs-is-collection').classList.contains('on');
   const status = document.querySelector('#rs-status-chips .chip.on')?.dataset.st || 'pending';
   const colour = document.querySelector('#rs-colour-chips .col-dot.on')?.dataset.col || '#A6192E';
+
   const notes = document.getElementById('rs-notes').value.trim();
   const job = getJob();
+
+  // Auto-save custom names to preset library
+  addCustomPreset(name, isCol ? 'collections' : 'rooms');
 
   if (RS.editIdx !== null) {
     const room = job.rooms[RS.editIdx];
@@ -1541,7 +1714,101 @@ function deleteRoomSheet() {
   toast('Deleted');
 }
 
-// ── COLLECTIONS SCREEN ──
+// ── PHOTO STRIPS — rooms / collections / items ──
+// State for which room/collection is selected in each screen
+const PHOTO_CTX = { roomIdx: null, collIdx: null };
+
+function renderRoomPhotoStrip() {
+  const job = getJob();
+  const section = document.getElementById('rooms-photo-section');
+  // Find selected room (first non-collection, or whichever was last clicked)
+  if (!job || !job.rooms.length) { section.style.display = 'none'; return; }
+  const idx = PHOTO_CTX.roomIdx !== null ? PHOTO_CTX.roomIdx : job.rooms.findIndex(r => !r.isCollection);
+  if (idx < 0) { section.style.display = 'none'; return; }
+  const room = job.rooms[idx];
+  PHOTO_CTX.roomIdx = idx;
+  section.style.display = 'block';
+  document.getElementById('rooms-photo-room-label').textContent = `— ${room.name}`;
+  const photos = room.photos?.wide || [];
+  const strip = document.getElementById('rooms-photo-strip');
+  strip.innerHTML = photos.map((src, pi) => `
+    <div style="position:relative;flex-shrink:0;">
+      <img src="${src}" style="width:80px;height:80px;object-fit:cover;border-radius:10px;cursor:pointer;" onclick="openStampOverlay('${src}')">
+      <button onclick="removeRoomPhoto(${idx},${pi})" style="position:absolute;top:2px;right:2px;background:rgba(0,0,0,0.5);border:none;color:white;border-radius:50%;width:18px;height:18px;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;">×</button>
+    </div>`).join('') +
+    `<div class="ptree-add-wide" onclick="openCameraFor('room')" style="flex-shrink:0;width:80px;height:80px;border-radius:10px;">
+      <span style="font-size:20px;">📷</span>
+    </div>`;
+}
+
+function removeRoomPhoto(roomIdx, photoIdx) {
+  const job = getJob();
+  job.rooms[roomIdx].photos.wide.splice(photoIdx, 1);
+  save(); renderRoomPhotoStrip();
+}
+
+function renderCollectionPhotoStrip() {
+  const job = getJob();
+  const section = document.getElementById('collections-photo-section');
+  if (!job) { section.style.display = 'none'; return; }
+  const cols = job.rooms.filter(r => r.isCollection);
+  if (!cols.length) { section.style.display = 'none'; return; }
+  const col = PHOTO_CTX.collIdx !== null ? job.rooms[PHOTO_CTX.collIdx] : cols[0];
+  const idx = job.rooms.indexOf(col);
+  PHOTO_CTX.collIdx = idx;
+  section.style.display = 'block';
+  document.getElementById('collections-photo-label').textContent = `— ${col.name}`;
+  const photos = col.photos?.wide || [];
+  const strip = document.getElementById('collections-photo-strip');
+  strip.innerHTML = photos.map((src, pi) => `
+    <div style="position:relative;flex-shrink:0;">
+      <img src="${src}" style="width:80px;height:80px;object-fit:cover;border-radius:10px;cursor:pointer;" onclick="openStampOverlay('${src}')">
+      <button onclick="removeCollPhoto(${idx},${pi})" style="position:absolute;top:2px;right:2px;background:rgba(0,0,0,0.5);border:none;color:white;border-radius:50%;width:18px;height:18px;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;">×</button>
+    </div>`).join('') +
+    `<div class="ptree-add-wide" onclick="openCameraFor('collection')" style="flex-shrink:0;width:80px;height:80px;border-radius:10px;">
+      <span style="font-size:20px;">📷</span>
+    </div>`;
+}
+
+function removeCollPhoto(collIdx, photoIdx) {
+  const job = getJob();
+  if (!job.rooms[collIdx].photos) job.rooms[collIdx].photos = { wide:[] };
+  job.rooms[collIdx].photos.wide.splice(photoIdx, 1);
+  save(); renderCollectionPhotoStrip();
+}
+
+function renderItemsPhotoStrip() {
+  const job = getJob();
+  const strip = document.getElementById('items-photo-strip');
+  if (!job) return;
+  const idx = parseInt(document.getElementById('items-room-select').value);
+  const room = job.rooms[idx];
+  if (!room) return;
+  if (!room.photos) room.photos = { wide: [] };
+  const photos = room.photos.wide || [];
+  strip.innerHTML = photos.map((src, pi) => `
+    <div style="position:relative;flex-shrink:0;">
+      <img src="${src}" style="width:80px;height:80px;object-fit:cover;border-radius:10px;cursor:pointer;" onclick="openStampOverlay('${src}')">
+      <button onclick="removeItemsPhoto(${idx},${pi})" style="position:absolute;top:2px;right:2px;background:rgba(0,0,0,0.5);border:none;color:white;border-radius:50%;width:18px;height:18px;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;">×</button>
+    </div>`).join('') +
+    `<div class="ptree-add-wide" onclick="openCameraFor('items')" style="flex-shrink:0;width:80px;height:80px;border-radius:10px;">
+      <span style="font-size:20px;">📷</span>
+    </div>`;
+}
+
+function removeItemsPhoto(roomIdx, photoIdx) {
+  const job = getJob();
+  job.rooms[roomIdx].photos.wide.splice(photoIdx, 1);
+  save(); renderItemsPhotoStrip();
+}
+
+// Route camera captures to the right strip
+function openCameraFor(context) {
+  STATE.cameraMode = context; // 'room', 'collection', 'items'
+  openCamera(context);
+}
+
+
 function renderCollections() {
   const job = getJob();
   const container = document.getElementById('collections-list');
@@ -1590,6 +1857,7 @@ function renderCollections() {
 
   document.getElementById('col-items').textContent = totalItems;
   document.getElementById('col-vol').textContent = totalVol.toFixed(1);
+  renderCollectionPhotoStrip();
 }
 
 function getRoomName(job, item) {
@@ -1725,10 +1993,34 @@ function capturePhoto() {
   closeCamera();
   if (STATE.cameraMode === 'access') {
     addAccessPhoto(dataUrl);
+  } else if (STATE.cameraMode === 'room') {
+    addPhotoToContext('room', dataUrl);
+  } else if (STATE.cameraMode === 'collection') {
+    addPhotoToContext('collection', dataUrl);
+  } else if (STATE.cameraMode === 'items') {
+    addPhotoToContext('items', dataUrl);
   } else {
     processScannedImage(dataUrl, b64);
   }
 }
+
+function addPhotoToContext(context, dataUrl) {
+  const job = getJob();
+  if (!job) return;
+  let roomIdx = null;
+  if (context === 'room') roomIdx = PHOTO_CTX.roomIdx ?? job.rooms.findIndex(r => !r.isCollection);
+  else if (context === 'collection') roomIdx = PHOTO_CTX.collIdx ?? job.rooms.findIndex(r => r.isCollection);
+  else if (context === 'items') roomIdx = parseInt(document.getElementById('items-room-select').value);
+  if (roomIdx === null || roomIdx < 0 || !job.rooms[roomIdx]) { toast('No room selected'); return; }
+  if (!job.rooms[roomIdx].photos) job.rooms[roomIdx].photos = { wide: [] };
+  job.rooms[roomIdx].photos.wide.push(dataUrl);
+  save();
+  toast('Photo saved');
+  if (context === 'room') renderRoomPhotoStrip();
+  else if (context === 'collection') renderCollectionPhotoStrip();
+  else if (context === 'items') renderItemsPhotoStrip();
+}
+
 
 function closeCamera() {
   if (STATE.cameraStream) { STATE.cameraStream.getTracks().forEach(t => t.stop()); STATE.cameraStream = null; }
@@ -2238,6 +2530,7 @@ function renderItemsList() {
   save();
   const roomsScreen = document.getElementById('screen-rooms');
   if (roomsScreen.classList.contains('active')) renderRooms();
+  renderItemsPhotoStrip();
 }
 
 function syncCollectionItems(job, sourceRoomIdx) {
