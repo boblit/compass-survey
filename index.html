@@ -226,7 +226,156 @@ html, body {
 .metric-val { font-size: 22px; font-weight: 500; color: var(--charcoal); font-family: var(--font-display); }
 .metric-lbl { font-size: 10px; color: var(--gray-mid); margin-top: 3px; text-transform: uppercase; letter-spacing: 0.05em; }
 
-/* ── ACCESS SCORE ── */
+/* ── COLLECTION CARDS ── */
+.coll-card {
+  background: var(--white);
+  border-radius: 12px;
+  border: 0.5px solid rgba(0,0,0,0.07);
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.coll-header {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 14px;
+  border-bottom: 0.5px solid rgba(0,0,0,0.06);
+  cursor: pointer;
+}
+.coll-dot {
+  width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+}
+.coll-name { flex: 1; font-size: 14px; font-weight: 500; color: var(--charcoal); }
+.coll-meta { font-size: 12px; color: var(--gray-mid); }
+.coll-items { padding: 8px 14px 12px; }
+.coll-item-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 0;
+  border-bottom: 0.5px solid rgba(0,0,0,0.04);
+  font-size: 13px;
+}
+.coll-item-row:last-child { border-bottom: none; }
+.coll-item-name { flex: 1; color: var(--charcoal); }
+.coll-item-vol { color: var(--gray-mid); font-size: 12px; }
+.coll-item-room { font-size: 10px; color: var(--gray-mid); background: var(--gray-pale); padding: 2px 6px; border-radius: 8px; }
+
+/* ── ROOM SHEET / COLOUR DOTS ── */
+.col-dot {
+  width: 28px; height: 28px; border-radius: 50%; cursor: pointer;
+  border: 3px solid transparent; transition: border-color 0.15s;
+  flex-shrink: 0;
+}
+.col-dot.on { border-color: white; box-shadow: 0 0 0 2px var(--charcoal); }
+
+/* ── ROOM LIST — collection row style ── */
+.row-collection {
+  background: linear-gradient(90deg, rgba(166,25,46,0.04) 0%, transparent 100%);
+}
+.row-collection .row-icon { filter: none; }
+
+/* ── STAMP OVERLAY ── */
+.stamp-btn {
+  padding: 8px 14px; border-radius: 10px; border: none;
+  color: white; font-size: 13px; font-weight: 500;
+  cursor: pointer; font-family: var(--font-body);
+  opacity: 0.7; transition: opacity 0.12s;
+}
+.stamp-btn.on { opacity: 1; box-shadow: 0 0 0 2px white; }
+.stamp-marker {
+  position: absolute;
+  font-size: 22px;
+  line-height: 1;
+  cursor: grab;
+  user-select: none;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.6);
+  touch-action: none;
+  transform: translate(-50%, -50%);
+  pointer-events: all;
+}
+
+/* ── ROOM SHEET FORM INPUTS ── */
+#room-sheet input[type=text], #room-sheet textarea {
+  width: 100%; border: 1px solid var(--gray-light);
+  border-radius: 10px; padding: 9px 12px;
+  font-size: 14px; font-family: var(--font-body);
+  background: var(--white); color: var(--charcoal);
+  -webkit-appearance: none;
+}
+#room-sheet input:focus, #room-sheet textarea:focus {
+  outline: none; border-color: var(--red);
+  box-shadow: 0 0 0 3px rgba(166,25,46,0.1);
+}
+
+/* ── ITEM COLLECT ATTRIBUTION ── */
+.collect-attr {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 0 4px;
+  flex-wrap: wrap;
+}
+.attr-chip {
+  padding: 5px 11px; border-radius: 20px; font-size: 12px;
+  font-weight: 500; cursor: pointer; border: 1px solid var(--gray-light);
+  color: var(--gray-dark); background: var(--gray-pale);
+  transition: all 0.12s; font-family: var(--font-body);
+}
+.attr-chip.on { background: var(--charcoal); color: white; border-color: var(--charcoal); }
+
+/* ── STAMP OVERLAY DISPLAY ── */
+#stamp-overlay { display: none; }
+#stamp-overlay.open { display: flex; }
+
+
+.item-card {
+  background: var(--white);
+  border-radius: 12px;
+  border: 0.5px solid rgba(0,0,0,0.07);
+  margin-bottom: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: box-shadow 0.12s;
+}
+.item-card:active { box-shadow: 0 2px 8px rgba(166,25,46,0.12); }
+.item-card-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px 10px;
+}
+.item-card-icon { font-size: 22px; flex-shrink: 0; width: 28px; text-align: center; margin-top: 1px; }
+.item-card-body { flex: 1; min-width: 0; }
+.item-card-name { font-size: 14px; font-weight: 500; color: var(--charcoal); }
+.item-card-meta { font-size: 12px; color: var(--gray-mid); margin-top: 3px; line-height: 1.4; }
+.item-card-vol { font-size: 13px; font-weight: 500; color: var(--charcoal); white-space: nowrap; }
+.item-card-flags {
+  display: flex; flex-wrap: wrap; gap: 4px;
+  padding: 0 14px 10px;
+}
+.item-flag-tag {
+  font-size: 10px; font-weight: 500;
+  padding: 2px 7px; border-radius: 10px;
+  background: var(--warn-bg); color: var(--warn-text);
+}
+.item-flag-tag.fragile { background: #fcebeb; color: #8a1a1a; }
+.item-flag-tag.crated { background: var(--info-bg); color: var(--info-text); }
+.item-flag-tag.disassemble { background: #f0ebe8; color: #6e3a1a; }
+.item-flag-tag.empty-state { display: block; text-align: center; padding: 32px 16px; font-size: 13px; color: var(--gray-mid); background: var(--white); border-radius: 12px; border: 0.5px solid rgba(0,0,0,0.07); }
+
+/* ── ITEM SHEET ── */
+#item-sheet input[type=text], #item-sheet input[type=number], #item-sheet textarea {
+  width: 100%;
+  border: 1px solid var(--gray-light);
+  border-radius: 10px;
+  padding: 9px 12px;
+  font-size: 14px;
+  font-family: var(--font-body);
+  background: var(--white);
+  color: var(--charcoal);
+  -webkit-appearance: none;
+}
+#item-sheet input:focus, #item-sheet textarea:focus {
+  outline: none;
+  border-color: var(--red);
+  box-shadow: 0 0 0 3px rgba(166,25,46,0.1);
+}
+
 .score-card { padding: 16px 14px; display: flex; align-items: center; gap: 14px; }
 .score-ring {
   width: 64px; height: 64px;
@@ -480,6 +629,8 @@ label { font-size: 12px; color: var(--gray-mid); display: block; margin-bottom: 
   <div id="tabbar">
     <div class="tab active" data-tab="access">Access</div>
     <div class="tab" data-tab="rooms">Rooms</div>
+    <div class="tab" data-tab="collections">Collections</div>
+    <div class="tab" data-tab="items">Items</div>
     <div class="tab" data-tab="scan">Scan</div>
     <div class="tab" data-tab="photos">Photos</div>
     <div class="tab" data-tab="handling">Handling</div>
@@ -623,7 +774,226 @@ label { font-size: 12px; color: var(--gray-mid); display: block; margin-bottom: 
 
       <div class="sec">Rooms & spaces</div>
       <div class="card" id="room-list"></div>
-      <button class="btn btn-block" style="margin-top:4px;" onclick="addRoom()">+ Add room or space</button>
+      <button class="btn btn-block" style="margin-top:4px;" onclick="openRoomSheet(null)">+ Add room or space</button>
+    </div>
+
+    <!-- COLLECTIONS -->
+    <div class="screen" id="screen-collections">
+      <div class="metrics">
+        <div class="metric"><div class="metric-val" id="col-count">0</div><div class="metric-lbl">collections</div></div>
+        <div class="metric"><div class="metric-val" id="col-items">0</div><div class="metric-lbl">items</div></div>
+        <div class="metric"><div class="metric-val" id="col-vol">0.0</div><div class="metric-lbl">m³ total</div></div>
+      </div>
+      <div class="sec">Named collections</div>
+      <div id="collections-list"></div>
+      <button class="btn btn-block" style="margin-top:4px;" onclick="openRoomSheet(null, true)">+ Add named collection</button>
+    </div>
+
+    <!-- ROOM / COLLECTION SHEET -->
+    <div id="room-sheet-backdrop" onclick="closeRoomSheet()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:200;"></div>
+    <div id="room-sheet" style="display:none;position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:var(--cream);border-radius:20px 20px 0 0;z-index:201;padding-bottom:calc(24px + env(safe-area-inset-bottom,0px));">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 16px 12px;">
+        <div style="font-family:var(--font-display);font-size:18px;color:var(--charcoal);" id="rs-title">Add room</div>
+        <button onclick="closeRoomSheet()" style="background:var(--gray-pale);border:none;border-radius:50%;width:30px;height:30px;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--gray-dark);">✕</button>
+      </div>
+      <div style="padding:0 16px;">
+        <div class="form-group" style="margin-bottom:14px;">
+          <label>Name</label>
+          <input type="text" id="rs-name" placeholder="e.g. Bob's painting room, Master bedroom…" autocomplete="off">
+        </div>
+
+        <!-- Type toggle -->
+        <div class="card" style="margin-bottom:14px;">
+          <div class="toggle-wrap">
+            <div class="toggle-info">
+              <div class="toggle-label">Named collection</div>
+              <div class="toggle-sub">Items may be spread across the site — tracked separately to avoid double-counting</div>
+            </div>
+            <button class="toggle" id="rs-is-collection" onclick="this.classList.toggle('on');toggleRsType()"></button>
+          </div>
+        </div>
+
+        <!-- Status (rooms only) -->
+        <div id="rs-status-wrap" style="margin-bottom:14px;">
+          <div class="sec" style="margin:0 0 6px;">Survey status</div>
+          <div class="chips" id="rs-status-chips" style="padding:0;">
+            <span class="chip on" data-st="pending" onclick="pickChip(this,'rs-status-chips')">Pending</span>
+            <span class="chip" data-st="review" onclick="pickChip(this,'rs-status-chips')">Review</span>
+            <span class="chip" data-st="done" onclick="pickChip(this,'rs-status-chips')">Done</span>
+          </div>
+        </div>
+
+        <!-- Collection colour tag (collections only) -->
+        <div id="rs-colour-wrap" style="margin-bottom:14px;display:none;">
+          <div class="sec" style="margin:0 0 6px;">Colour tag</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;" id="rs-colour-chips">
+            <div class="col-dot on" data-col="#A6192E" onclick="pickColDot(this)" style="background:#A6192E;"></div>
+            <div class="col-dot" data-col="#1a4f8a" onclick="pickColDot(this)" style="background:#1a4f8a;"></div>
+            <div class="col-dot" data-col="#2d6e10" onclick="pickColDot(this)" style="background:#2d6e10;"></div>
+            <div class="col-dot" data-col="#7a4a00" onclick="pickColDot(this)" style="background:#7a4a00;"></div>
+            <div class="col-dot" data-col="#555" onclick="pickColDot(this)" style="background:#555;"></div>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom:20px;">
+          <label>Notes <span style="font-weight:400;color:var(--gray-mid);">(optional)</span></label>
+          <textarea id="rs-notes" rows="2" placeholder="Description, location hints, owner context…"></textarea>
+        </div>
+
+        <button class="btn btn-primary btn-block" onclick="saveRoomSheet()">Save</button>
+        <button class="btn btn-block" id="rs-delete-btn" onclick="deleteRoomSheet()" style="margin-top:8px;display:none;color:#c0392b;border-color:#e8c0c6;">Delete</button>
+      </div>
+    </div>
+
+    <!-- PHOTO STAMP OVERLAY -->
+    <div id="stamp-overlay" style="display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.88);flex-direction:column;">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;flex-shrink:0;">
+        <div style="font-family:var(--font-display);font-size:17px;color:white;">Mark photo</div>
+        <button onclick="closeStampOverlay()" style="background:rgba(255,255,255,0.15);border:none;border-radius:50%;width:30px;height:30px;color:white;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
+      </div>
+      <div style="flex:1;position:relative;overflow:hidden;" id="stamp-canvas-wrap">
+        <img id="stamp-photo-img" style="width:100%;height:100%;object-fit:contain;display:block;">
+        <div id="stamp-markers-layer" style="position:absolute;inset:0;pointer-events:none;"></div>
+      </div>
+      <div style="padding:14px 16px;flex-shrink:0;">
+        <div style="font-size:11px;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;">Tap a stamp, then tap the photo to place it</div>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+          <button class="stamp-btn on" data-stamp="✕" onclick="selectStamp(this,'✕')" style="background:rgba(192,57,43,0.85);">✕ Exclude</button>
+          <button class="stamp-btn" data-stamp="✓" onclick="selectStamp(this,'✓')" style="background:rgba(45,110,16,0.85);">✓ Include</button>
+          <button class="stamp-btn" data-stamp="⭐" onclick="selectStamp(this,'⭐')" style="background:rgba(122,74,0,0.85);">⭐ Collection</button>
+          <button class="stamp-btn" data-stamp="?" onclick="selectStamp(this,'?')" style="background:rgba(26,79,138,0.85);">? Query</button>
+          <div style="flex:1;"></div>
+          <button onclick="clearStamps()" style="background:none;border:1px solid rgba(255,255,255,0.3);color:rgba(255,255,255,0.7);padding:7px 12px;border-radius:8px;font-size:12px;cursor:pointer;font-family:var(--font-body);">Clear all</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ITEMS -->
+    <div class="screen" id="screen-items">
+      <!-- Room selector -->
+      <div class="card" style="padding:10px 12px;margin-bottom:4px;">
+        <label style="font-size:11px;color:var(--gray-mid);text-transform:uppercase;letter-spacing:0.08em;font-weight:500;display:block;margin-bottom:6px;">Room</label>
+        <select id="items-room-select" onchange="renderItemsList()"></select>
+      </div>
+
+      <!-- Metrics -->
+      <div class="metrics" id="items-metrics" style="margin-top:8px;">
+        <div class="metric"><div class="metric-val" id="im-items">0</div><div class="metric-lbl">items</div></div>
+        <div class="metric"><div class="metric-val" id="im-vol">0.0</div><div class="metric-lbl">m³ est.</div></div>
+        <div class="metric"><div class="metric-val" id="im-flags">0</div><div class="metric-lbl">flagged</div></div>
+      </div>
+
+      <!-- Item list -->
+      <div class="sec">Item catalogue</div>
+      <div id="items-list"></div>
+      <button class="btn btn-primary btn-block" style="margin-top:4px;" onclick="openAddItem()">+ Add item</button>
+    </div>
+
+    <!-- ADD/EDIT ITEM SHEET -->
+    <div id="item-sheet-backdrop" onclick="closeItemSheet()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:200;"></div>
+    <div id="item-sheet" style="display:none;position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:var(--cream);border-radius:20px 20px 0 0;z-index:201;max-height:92dvh;overflow-y:auto;padding-bottom:calc(24px + env(safe-area-inset-bottom,0px));">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 16px 12px;">
+        <div style="font-family:var(--font-display);font-size:18px;color:var(--charcoal);" id="sheet-title">Add item</div>
+        <button onclick="closeItemSheet()" style="background:var(--gray-pale);border:none;border-radius:50%;width:30px;height:30px;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--gray-dark);">✕</button>
+      </div>
+
+      <div style="padding:0 16px;">
+        <!-- Name -->
+        <div class="form-group" style="margin-bottom:14px;">
+          <label>Item name</label>
+          <input type="text" id="item-name" placeholder="e.g. Queen bed frame, Washing machine…" autocomplete="off">
+        </div>
+
+        <!-- Category -->
+        <div style="margin-bottom:14px;">
+          <div class="sec" style="margin:0 0 6px;">Category</div>
+          <div class="chips" id="item-category-chips" style="padding:0;">
+            <span class="chip on" data-cat="furniture" onclick="pickChip(this,'item-category-chips')">🛋 Furniture</span>
+            <span class="chip" data-cat="appliance" onclick="pickChip(this,'item-category-chips')">🔌 Appliance</span>
+            <span class="chip" data-cat="boxes" onclick="pickChip(this,'item-category-chips')">📦 Boxes</span>
+            <span class="chip" data-cat="art" onclick="pickChip(this,'item-category-chips')">🖼 Art / mirror</span>
+            <span class="chip" data-cat="specialist" onclick="pickChip(this,'item-category-chips')">⭐ Specialist</span>
+            <span class="chip" data-cat="other" onclick="pickChip(this,'item-category-chips')">Other</span>
+          </div>
+        </div>
+
+        <!-- Size -->
+        <div style="margin-bottom:14px;">
+          <div class="sec" style="margin:0 0 4px;">Size <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--gray-mid);font-size:11px;">— sets volume estimate</span></div>
+          <div class="chips" id="item-size-chips" style="padding:0;">
+            <span class="chip" data-size="xs" data-vol="0.05" onclick="pickChip(this,'item-size-chips')">XS &lt;0.1m³</span>
+            <span class="chip on" data-size="s" data-vol="0.2" onclick="pickChip(this,'item-size-chips')">S ~0.2m³</span>
+            <span class="chip" data-size="m" data-vol="0.5" onclick="pickChip(this,'item-size-chips')">M ~0.5m³</span>
+            <span class="chip" data-size="l" data-vol="1.0" onclick="pickChip(this,'item-size-chips')">L ~1.0m³</span>
+            <span class="chip" data-size="xl" data-vol="2.0" onclick="pickChip(this,'item-size-chips')">XL ~2.0m³</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;margin-top:8px;">
+            <label style="font-size:12px;color:var(--gray-mid);white-space:nowrap;">Custom m³</label>
+            <input type="number" id="item-vol-custom" placeholder="e.g. 0.8" step="0.05" min="0" max="20" style="width:90px;padding:6px 10px;border-radius:8px;border:1px solid var(--gray-light);font-size:13px;font-family:var(--font-body);">
+          </div>
+        </div>
+
+        <!-- Condition -->
+        <div style="margin-bottom:14px;">
+          <div class="sec" style="margin:0 0 6px;">Condition</div>
+          <div class="chips" id="item-condition-chips" style="padding:0;">
+            <span class="chip on" data-cond="good" onclick="pickChip(this,'item-condition-chips')">✅ Good</span>
+            <span class="chip" data-cond="fair" onclick="pickChip(this,'item-condition-chips')">⚠️ Fair</span>
+            <span class="chip" data-cond="poor" onclick="pickChip(this,'item-condition-chips')">❌ Poor</span>
+          </div>
+        </div>
+
+        <!-- Handling flags (multi-select) -->
+        <div style="margin-bottom:14px;">
+          <div class="sec" style="margin:0 0 6px;">Handling flags <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;">(select all that apply)</span></div>
+          <div class="chips" style="padding:0;" id="item-flags-chips">
+            <span class="chip" data-flag="fragile" onclick="this.classList.toggle('on')">🔴 Fragile</span>
+            <span class="chip" data-flag="disassemble" onclick="this.classList.toggle('on')">🔧 Disassemble</span>
+            <span class="chip" data-flag="crated" onclick="this.classList.toggle('on')">📐 Crate required</span>
+            <span class="chip" data-flag="2person" onclick="this.classList.toggle('on')">👥 2-person lift</span>
+            <span class="chip" data-flag="owner" onclick="this.classList.toggle('on')">👤 Owner present</span>
+          </div>
+        </div>
+
+        <!-- Qty -->
+        <div class="form-group" style="margin-bottom:14px;">
+          <label>Quantity</label>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <button onclick="stepQty(-1)" style="width:36px;height:36px;border-radius:50%;border:1px solid var(--gray-light);background:var(--white);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:var(--font-body);">−</button>
+            <span id="item-qty-display" style="font-size:18px;font-weight:500;min-width:24px;text-align:center;">1</span>
+            <button onclick="stepQty(1)" style="width:36px;height:36px;border-radius:50%;border:1px solid var(--gray-light);background:var(--white);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:var(--font-body);">+</button>
+          </div>
+        </div>
+
+        <!-- Collection attribution -->
+        <div style="margin-bottom:14px;" id="item-collection-wrap" style="display:none;">
+          <div class="sec" style="margin:0 0 6px;">Named collection <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;">(optional)</span></div>
+          <select id="item-collection-select" onchange="toggleCountInWrap()" style="width:100%;border:1px solid var(--gray-light);border-radius:10px;padding:9px 12px;font-size:14px;font-family:var(--font-body);background:var(--white);color:var(--charcoal);-webkit-appearance:none;margin-bottom:8px;">
+            <option value="">— not part of a collection —</option>
+          </select>
+          <div class="collect-attr" id="item-countin-wrap" style="display:none;">
+            <span style="font-size:12px;color:var(--gray-mid);width:100%;margin-bottom:2px;">Count this item's volume in:</span>
+            <button class="attr-chip on" data-ci="both" onclick="pickAttr(this)">Room & collection</button>
+            <button class="attr-chip" data-ci="room" onclick="pickAttr(this)">Room only</button>
+            <button class="attr-chip" data-ci="collection" onclick="pickAttr(this)">Collection only</button>
+          </div>
+        </div>
+
+        <!-- Notes -->
+        <div class="form-group" style="margin-bottom:14px;">
+          <label>Notes</label>
+          <textarea id="item-notes" rows="2" placeholder="Owner instructions, access constraints, condition detail…"></textarea>
+        </div>
+
+        <!-- Photo stamp -->
+        <div style="margin-bottom:20px;">
+          <div class="sec" style="margin:0 0 6px;">Photo markup</div>
+          <button class="btn btn-sm btn-block" onclick="promptStampPhoto()" style="justify-content:flex-start;gap:8px;"><span style="font-size:16px;">🖊</span> Mark a photo (place ✕ / ✓ stamps)</button>
+        </div>
+
+        <button class="btn btn-primary btn-block" id="item-save-btn" onclick="saveItem()">Save item</button>
+        <button class="btn btn-block" id="item-delete-btn" onclick="deleteItem()" style="margin-top:8px;display:none;color:#c0392b;border-color:#e8c0c6;">Delete item</button>
+      </div>
     </div>
 
     <!-- SCAN -->
@@ -941,11 +1311,12 @@ document.querySelectorAll('.tab').forEach(t => {
     t.classList.add('active');
     document.getElementById('screen-' + t.dataset.tab).classList.add('active');
     if (t.dataset.tab === 'rooms') renderRooms();
+    if (t.dataset.tab === 'collections') renderCollections();
     if (t.dataset.tab === 'packing') renderPacking();
     if (t.dataset.tab === 'jobs') renderJobs();
     if (t.dataset.tab === 'photos') renderPhotoSelects();
     if (t.dataset.tab === 'handling') renderHandling();
-    if (t.dataset.tab === 'scan') renderScanRoomSelect();
+    if (t.dataset.tab === 'items') renderItemsScreen();
   });
 });
 
@@ -1033,54 +1404,281 @@ function renderRooms() {
   const list = document.getElementById('room-list');
   if (!job) { list.innerHTML = '<div class="row"><div class="row-body"><div class="row-title" style="color:var(--gray-mid)">No job selected — go to Jobs tab to start one</div></div></div>'; return; }
   const rooms = job.rooms || [];
-  const done = rooms.filter(r => r.status === 'done').length;
-  const pct = rooms.length ? Math.round(done/rooms.length*100) : 0;
-  document.getElementById('rooms-progress-label').textContent = `${done} of ${rooms.length} rooms surveyed`;
+  // Progress counts only non-collection rooms
+  const realRooms = rooms.filter(r => !r.isCollection);
+  const done = realRooms.filter(r => r.status === 'done').length;
+  const pct = realRooms.length ? Math.round(done/realRooms.length*100) : 0;
+  document.getElementById('rooms-progress-label').textContent = `${done} of ${realRooms.length} rooms surveyed`;
   document.getElementById('rooms-progress-pct').textContent = pct + '%';
   document.getElementById('rooms-progress-fill').style.width = pct + '%';
-  const totalVol = rooms.reduce((s,r) => s + (r.volume||0), 0);
-  const totalItems = rooms.reduce((s,r) => s + (r.items||[]).length, 0);
-  const queries = rooms.reduce((s,r) => s + (r.queries||0), 0);
+  const totalVol = realRooms.reduce((s,r) => s + (r.volume||0), 0);
+  const totalItems = realRooms.reduce((s,r) => s + (r.items||[]).length, 0);
+  const queries = realRooms.reduce((s,r) => s + (r.queries||0), 0);
   document.getElementById('m-vol').textContent = totalVol.toFixed(1);
   document.getElementById('m-items').textContent = totalItems;
   document.getElementById('m-queries').textContent = queries;
   const icons = { bedroom:'🛏', lounge:'🛋', kitchen:'🍳', garage:'📦', bathroom:'🚿', dining:'🍽️', study:'📚', laundry:'🧺', hall:'🚪' };
   list.innerHTML = rooms.map((r,i) => {
+    if (r.isCollection) {
+      const col = r.collectionColour || '#A6192E';
+      const colItems = (r.itemObjs||[]).length;
+      return `<div class="row row-collection" onclick="openRoomSheet(${i})">
+        <span class="row-icon">🗂</span>
+        <div class="row-body">
+          <div class="row-title" style="display:flex;align-items:center;gap:6px;">
+            <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${col};flex-shrink:0;"></span>
+            ${r.name}
+          </div>
+          <div class="row-sub">Collection · ${colItems} items · ${(r.volume||0).toFixed(1)} m³</div>
+        </div>
+        <span class="badge b-info">Collection</span>
+      </div>`;
+    }
     const icon = Object.entries(icons).find(([k]) => r.name.toLowerCase().includes(k))?.[1] || '🏠';
     const badgeCls = r.status==='done'?'b-ok':r.status==='review'?'b-warn':'b-gray';
     const badgeTxt = r.status==='done'?'Done':r.status==='review'?'Review':'Pending';
-    return `<div class="row" onclick="editRoom(${i})">
+    return `<div class="row" onclick="openRoomSheet(${i})">
       <span class="row-icon">${icon}</span>
       <div class="row-body">
         <div class="row-title">${r.name}</div>
-        <div class="row-sub">${r.items?.length||0} items · ${(r.volume||0).toFixed(1)} m³</div>
+        <div class="row-sub">${(r.itemObjs||r.items||[]).length} items · ${(r.volume||0).toFixed(1)} m³</div>
       </div>
       <span class="badge ${badgeCls}">${badgeTxt}</span>
     </div>`;
-  }).join('') + `<div class="row" onclick="addRoom()">
+  }).join('') + `<div class="row" onclick="openRoomSheet(null)">
     <span class="row-icon" style="color:var(--gray-mid)">＋</span>
     <div class="row-body"><div class="row-title" style="color:var(--gray-mid)">Add room or space</div></div>
   </div>`;
 }
 
-function addRoom() {
+// ── ROOM SHEET ──
+const RS = { editIdx: null };
+
+function openRoomSheet(idx, forceCollection) {
   ensureJob();
-  const name = prompt('Room name (e.g. Master Bedroom, Garage):');
-  if (!name) return;
+  RS.editIdx = idx;
   const job = getJob();
-  job.rooms.push({ name, status: 'pending', volume: 0, items: [], queries: 0, photos: { wide:[], zones:{} }, notes: '' });
-  save();
-  renderRooms();
-  renderScanRoomSelect();
-  toast(`"${name}" added`);
+  const room = idx !== null ? job.rooms[idx] : null;
+
+  // Reset
+  document.getElementById('rs-name').value = room ? room.name : '';
+  document.getElementById('rs-notes').value = room ? (room.notes||'') : '';
+  document.getElementById('rs-title').textContent = room ? 'Edit' : (forceCollection ? 'Add collection' : 'Add room');
+
+  const isCol = room ? !!room.isCollection : !!forceCollection;
+  const tog = document.getElementById('rs-is-collection');
+  tog.classList.toggle('on', isCol);
+  toggleRsType();
+
+  // Status chips
+  const st = room?.status || 'pending';
+  document.querySelectorAll('#rs-status-chips .chip').forEach(c => c.classList.toggle('on', c.dataset.st === st));
+
+  // Colour dots
+  const col = room?.collectionColour || '#A6192E';
+  document.querySelectorAll('#rs-colour-chips .col-dot').forEach(d => d.classList.toggle('on', d.dataset.col === col));
+
+  document.getElementById('rs-delete-btn').style.display = room ? 'flex' : 'none';
+  document.getElementById('room-sheet-backdrop').style.display = 'block';
+  document.getElementById('room-sheet').style.display = 'block';
+  setTimeout(() => document.getElementById('rs-name').focus(), 80);
 }
 
-function editRoom(i) {
-  const job = getJob();
-  const room = job.rooms[i];
-  const action = prompt(`Room: ${room.name}\nStatus: ${room.status}\n\nType "done", "review", or "pending" to change status, or press cancel:`);
-  if (action && ['done','review','pending'].includes(action)) { room.status = action; save(); renderRooms(); }
+function toggleRsType() {
+  const isCol = document.getElementById('rs-is-collection').classList.contains('on');
+  document.getElementById('rs-status-wrap').style.display = isCol ? 'none' : 'block';
+  document.getElementById('rs-colour-wrap').style.display = isCol ? 'block' : 'none';
 }
+
+function closeRoomSheet() {
+  document.getElementById('room-sheet-backdrop').style.display = 'none';
+  document.getElementById('room-sheet').style.display = 'none';
+}
+
+function pickColDot(el) {
+  document.querySelectorAll('#rs-colour-chips .col-dot').forEach(d => d.classList.remove('on'));
+  el.classList.add('on');
+}
+
+function saveRoomSheet() {
+  const name = document.getElementById('rs-name').value.trim();
+  if (!name) { toast('Please enter a name'); return; }
+  const isCol = document.getElementById('rs-is-collection').classList.contains('on');
+  const status = document.querySelector('#rs-status-chips .chip.on')?.dataset.st || 'pending';
+  const colour = document.querySelector('#rs-colour-chips .col-dot.on')?.dataset.col || '#A6192E';
+  const notes = document.getElementById('rs-notes').value.trim();
+  const job = getJob();
+
+  if (RS.editIdx !== null) {
+    const room = job.rooms[RS.editIdx];
+    room.name = name;
+    room.notes = notes;
+    if (!isCol) { room.isCollection = false; room.status = status; }
+    else { room.isCollection = true; room.collectionColour = colour; }
+    toast(`"${name}" updated`);
+  } else {
+    const newRoom = { name, status: isCol ? 'done' : status, volume: 0, items: [], itemObjs: [], queries: 0, photos: { wide:[], zones:{} }, notes, isCollection: isCol, collectionColour: isCol ? colour : null };
+    job.rooms.push(newRoom);
+    toast(`"${name}" ${isCol ? 'collection' : 'room'} added`);
+  }
+  save();
+  closeRoomSheet();
+  renderRooms();
+  renderScanRoomSelect();
+  renderItemsScreen();
+}
+
+function deleteRoomSheet() {
+  const job = getJob();
+  const room = job.rooms[RS.editIdx];
+  if (!confirm(`Delete "${room.name}"? All items in this ${room.isCollection ? 'collection' : 'room'} will be removed.`)) return;
+  job.rooms.splice(RS.editIdx, 1);
+  save();
+  closeRoomSheet();
+  renderRooms();
+  renderScanRoomSelect();
+  renderItemsScreen();
+  toast('Deleted');
+}
+
+// ── COLLECTIONS SCREEN ──
+function renderCollections() {
+  const job = getJob();
+  const container = document.getElementById('collections-list');
+  if (!job) { container.innerHTML = '<div class="empty-state item-flag-tag">No job selected.</div>'; return; }
+
+  const cols = (job.rooms || []).filter(r => r.isCollection);
+  document.getElementById('col-count').textContent = cols.length;
+
+  let totalItems = 0, totalVol = 0;
+  if (!cols.length) {
+    container.innerHTML = '<div class="empty-state item-flag-tag">No named collections yet. Tap + Add named collection to create one.</div>';
+    document.getElementById('col-items').textContent = 0;
+    document.getElementById('col-vol').textContent = '0.0';
+    return;
+  }
+
+  container.innerHTML = cols.map(col => {
+    const roomIdx = job.rooms.indexOf(col);
+    const items = col.itemObjs || [];
+    totalItems += items.length;
+    const vol = items.reduce((s, it) => s + (it.vol||0)*(it.qty||1), 0);
+    totalVol += vol;
+    const colour = col.collectionColour || '#A6192E';
+
+    const itemRows = items.length
+      ? items.map(it => {
+          const roomRef = it.countIn !== 'collection' ? `<span class="coll-item-room">${getRoomName(job, it) || 'unlinked'}</span>` : '';
+          return `<div class="coll-item-row">
+            <span style="font-size:14px;">${CAT_EMOJI[it.cat]||'📦'}</span>
+            <span class="coll-item-name">${it.name}${(it.qty||1)>1?' ×'+it.qty:''}</span>
+            ${roomRef}
+            <span class="coll-item-vol">${((it.vol||0)*(it.qty||1)).toFixed(2)} m³</span>
+          </div>`;
+        }).join('')
+      : '<div style="font-size:12px;color:var(--gray-mid);padding:6px 0;">No items yet — add items from the Items tab and assign to this collection.</div>';
+
+    return `<div class="coll-card">
+      <div class="coll-header" onclick="openRoomSheet(${roomIdx})">
+        <div class="coll-dot" style="background:${colour};"></div>
+        <div class="coll-name">${col.name}</div>
+        <div class="coll-meta">${items.length} items · ${vol.toFixed(1)} m³</div>
+      </div>
+      <div class="coll-items">${itemRows}</div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('col-items').textContent = totalItems;
+  document.getElementById('col-vol').textContent = totalVol.toFixed(1);
+}
+
+function getRoomName(job, item) {
+  // Find which room (non-collection) this item was originally added to
+  if (!item.sourceRoomIdx && item.sourceRoomIdx !== 0) return null;
+  return job.rooms[item.sourceRoomIdx]?.name || null;
+}
+
+// ── PHOTO STAMP OVERLAY ──
+const STAMP = { active: '✕', markers: [] };
+
+function openStampOverlay(imgSrc) {
+  document.getElementById('stamp-photo-img').src = imgSrc;
+  document.getElementById('stamp-markers-layer').innerHTML = '';
+  STAMP.markers = [];
+  // Reset stamp button selection
+  document.querySelectorAll('.stamp-btn').forEach(b => b.classList.toggle('on', b.dataset.stamp === '✕'));
+  STAMP.active = '✕';
+  document.getElementById('stamp-overlay').classList.add('open');
+  document.getElementById('stamp-canvas-wrap').addEventListener('click', placeStamp);
+}
+
+function closeStampOverlay() {
+  document.getElementById('stamp-overlay').classList.remove('open');
+  document.getElementById('stamp-canvas-wrap').removeEventListener('click', placeStamp);
+}
+
+function selectStamp(btn, sym) {
+  STAMP.active = sym;
+  document.querySelectorAll('.stamp-btn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+}
+
+function placeStamp(e) {
+  if (e.target.classList.contains('stamp-marker')) return; // clicking existing marker
+  const wrap = document.getElementById('stamp-canvas-wrap');
+  const rect = wrap.getBoundingClientRect();
+  const x = ((e.clientX - rect.left) / rect.width * 100).toFixed(1);
+  const y = ((e.clientY - rect.top) / rect.height * 100).toFixed(1);
+  const layer = document.getElementById('stamp-markers-layer');
+  const el = document.createElement('div');
+  el.className = 'stamp-marker';
+  el.textContent = STAMP.active;
+  el.style.left = x + '%';
+  el.style.top = y + '%';
+  // Make draggable
+  makeDraggable(el, wrap);
+  layer.appendChild(el);
+  STAMP.markers.push({ sym: STAMP.active, x, y });
+}
+
+function makeDraggable(el, container) {
+  let startX, startY, startL, startT;
+  const onMove = (e) => {
+    const cx = e.touches ? e.touches[0].clientX : e.clientX;
+    const cy = e.touches ? e.touches[0].clientY : e.clientY;
+    const rect = container.getBoundingClientRect();
+    const dx = (cx - startX) / rect.width * 100;
+    const dy = (cy - startY) / rect.height * 100;
+    el.style.left = Math.max(0, Math.min(100, startL + dx)) + '%';
+    el.style.top = Math.max(0, Math.min(100, startT + dy)) + '%';
+  };
+  const onEnd = () => {
+    document.removeEventListener('mousemove', onMove);
+    document.removeEventListener('touchmove', onMove);
+    document.removeEventListener('mouseup', onEnd);
+    document.removeEventListener('touchend', onEnd);
+  };
+  const onStart = (e) => {
+    e.stopPropagation();
+    const cx = e.touches ? e.touches[0].clientX : e.clientX;
+    const cy = e.touches ? e.touches[0].clientY : e.clientY;
+    startX = cx; startY = cy;
+    startL = parseFloat(el.style.left); startT = parseFloat(el.style.top);
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('touchmove', onMove, { passive: true });
+    document.addEventListener('mouseup', onEnd);
+    document.addEventListener('touchend', onEnd);
+  };
+  el.addEventListener('mousedown', onStart);
+  el.addEventListener('touchstart', onStart, { passive: true });
+}
+
+function clearStamps() {
+  document.getElementById('stamp-markers-layer').innerHTML = '';
+  STAMP.markers = [];
+}
+
+
 
 // ── SCAN ROOM SELECT ──
 function renderScanRoomSelect() {
@@ -1527,7 +2125,322 @@ function clearData() {
   }
 }
 
-// ── TOAST ──
+// ── ITEMS MODULE ──
+
+// Internal state for the sheet
+const ITEM_SHEET = { editIdx: null, qty: 1 };
+
+// Category → emoji lookup
+const CAT_EMOJI = { furniture:'🛋', appliance:'🔌', boxes:'📦', art:'🖼', specialist:'⭐', other:'📦' };
+const COND_BADGE = { good:'✅', fair:'⚠️', poor:'❌' };
+
+function renderItemsScreen() {
+  const job = getJob();
+  const sel = document.getElementById('items-room-select');
+  if (!job) {
+    sel.innerHTML = '<option>No job selected</option>';
+    document.getElementById('items-list').innerHTML = '<div class="empty-state item-flag-tag">Go to Jobs tab to start or select a job</div>';
+    return;
+  }
+  const prevVal = sel.value;
+  // Show ALL rooms/collections in selector so surveyor can catalogue either
+  sel.innerHTML = job.rooms.length
+    ? job.rooms.map((r,i) => `<option value="${i}">${r.isCollection ? '🗂 ' : ''}${r.name}</option>`).join('')
+    : '<option value="">— add a room first —</option>';
+  if (prevVal && parseInt(prevVal) < job.rooms.length) sel.value = prevVal;
+  // Populate collection attribution dropdown
+  populateCollectionSelect();
+  renderItemsList();
+}
+
+function populateCollectionSelect() {
+  const job = getJob();
+  const sel = document.getElementById('item-collection-select');
+  if (!job) return;
+  const collections = (job.rooms || []).filter(r => r.isCollection);
+  sel.innerHTML = '<option value="">— not part of a collection —</option>' +
+    collections.map((c, ci) => {
+      const realIdx = job.rooms.indexOf(c);
+      return `<option value="${realIdx}">${c.name}</option>`;
+    }).join('');
+  // Show/hide based on whether any collections exist
+  const wrap = document.getElementById('item-collection-wrap');
+  wrap.style.display = collections.length ? 'block' : 'none';
+  toggleCountInWrap();
+}
+
+function toggleCountInWrap() {
+  const sel = document.getElementById('item-collection-select');
+  const wrap = document.getElementById('item-countin-wrap');
+  wrap.style.display = sel.value ? 'flex' : 'none';
+}
+
+function pickAttr(btn) {
+  document.querySelectorAll('#item-countin-wrap .attr-chip').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+}
+
+function renderItemsList() {
+  const job = getJob();
+  const container = document.getElementById('items-list');
+  if (!job || !job.rooms.length) {
+    container.innerHTML = '<div class="empty-state item-flag-tag">Add a room in the Rooms tab first.</div>';
+    updateItemMetrics(0, 0, 0);
+    return;
+  }
+  const idx = parseInt(document.getElementById('items-room-select').value);
+  const room = job.rooms[idx];
+  if (!room) { container.innerHTML = ''; return; }
+
+  if (!room.itemObjs) room.itemObjs = [];
+  const items = room.itemObjs;
+  let totalVol = 0, flagged = 0;
+
+  if (!items.length) {
+    container.innerHTML = '<div class="empty-state item-flag-tag">No items catalogued yet. Tap + Add item to start.</div>';
+  } else {
+    container.innerHTML = items.map((it, i) => {
+      // Volume contribution depends on countIn setting
+      const ci = it.countIn || 'both';
+      const volContrib = (ci === 'collection') ? 0 : (it.vol||0)*(it.qty||1);
+      totalVol += volContrib;
+      const flags = it.flags || [];
+      if (flags.length) flagged++;
+      const emoji = CAT_EMOJI[it.cat] || '📦';
+      const flagHtml = flags.map(f => `<span class="item-flag-tag ${f}">${flagLabel(f)}</span>`).join('');
+      const qty = (it.qty||1) > 1 ? ` ×${it.qty}` : '';
+      const collBadge = it.collectionIdx !== undefined && it.collectionIdx !== null && it.collectionIdx !== ''
+        ? (() => { const col = job.rooms[parseInt(it.collectionIdx)]; return col ? `<span class="item-flag-tag" style="background:${col.collectionColour||'#A6192E'}20;color:${col.collectionColour||'#A6192E'};">🗂 ${col.name}</span>` : ''; })()
+        : '';
+      const volDisplay = ci === 'collection' ? `<span style="color:var(--gray-mid);text-decoration:line-through;">${((it.vol||0)*(it.qty||1)).toFixed(2)}</span>` : `${volContrib.toFixed(2)} m³`;
+      return `<div class="item-card" onclick="openEditItem(${i})">
+        <div class="item-card-top">
+          <div class="item-card-icon">${emoji}</div>
+          <div class="item-card-body">
+            <div class="item-card-name">${it.name}${qty}</div>
+            <div class="item-card-meta">${capFirst(it.cat||'other')} · ${COND_BADGE[it.cond]||''} ${capFirst(it.cond||'good')}${it.notes ? ' · ' + it.notes.substring(0,40) : ''}</div>
+          </div>
+          <div class="item-card-vol">${volDisplay}</div>
+        </div>
+        ${(flagHtml || collBadge) ? `<div class="item-card-flags">${flagHtml}${collBadge}</div>` : ''}
+      </div>`;
+    }).join('');
+  }
+
+  // Only count room-attributed volume back to the room
+  room.volume = totalVol;
+  room.items = items.map(it => it.name);
+
+  // Also sync items assigned to a collection into that collection's itemObjs
+  syncCollectionItems(job, idx);
+
+  updateItemMetrics(items.length, totalVol, flagged);
+  save();
+  const roomsScreen = document.getElementById('screen-rooms');
+  if (roomsScreen.classList.contains('active')) renderRooms();
+}
+
+function syncCollectionItems(job, sourceRoomIdx) {
+  // Clear all collection itemObjs that came from this source room
+  (job.rooms || []).filter(r => r.isCollection).forEach(col => {
+    col.itemObjs = (col.itemObjs || []).filter(it => it.sourceRoomIdx !== sourceRoomIdx);
+  });
+  // Re-add items that have a collection assignment
+  const sourceRoom = job.rooms[sourceRoomIdx];
+  if (!sourceRoom || !sourceRoom.itemObjs) return;
+  sourceRoom.itemObjs.forEach(it => {
+    const ci = it.collectionIdx !== undefined && it.collectionIdx !== null && it.collectionIdx !== '' ? parseInt(it.collectionIdx) : null;
+    if (ci === null || isNaN(ci)) return;
+    const col = job.rooms[ci];
+    if (!col || !col.isCollection) return;
+    if (!col.itemObjs) col.itemObjs = [];
+    // Store a reference copy in the collection
+    col.itemObjs.push({ ...it, sourceRoomIdx, countIn: it.countIn || 'both' });
+    // Update collection volume (only items counted in collection)
+    col.volume = col.itemObjs.reduce((s, i) => {
+      return s + (i.countIn !== 'room' ? (i.vol||0)*(i.qty||1) : 0);
+    }, 0);
+  });
+}
+
+function updateItemMetrics(count, vol, flags) {
+  document.getElementById('im-items').textContent = count;
+  document.getElementById('im-vol').textContent = vol.toFixed(1);
+  document.getElementById('im-flags').textContent = flags;
+}
+
+function flagLabel(f) {
+  return { fragile:'🔴 Fragile', disassemble:'🔧 Disassemble', crated:'📐 Crate', '2person':'👥 2-person', owner:'👤 Owner present' }[f] || f;
+}
+function capFirst(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : ''; }
+
+// ── CHIP HELPERS ──
+function pickChip(el, groupId) {
+  document.querySelectorAll(`#${groupId} .chip`).forEach(c => c.classList.remove('on'));
+  el.classList.add('on');
+  if (groupId === 'item-size-chips') document.getElementById('item-vol-custom').value = '';
+}
+
+function stepQty(delta) {
+  ITEM_SHEET.qty = Math.max(1, Math.min(99, ITEM_SHEET.qty + delta));
+  document.getElementById('item-qty-display').textContent = ITEM_SHEET.qty;
+}
+
+// ── OPEN / CLOSE SHEET ──
+function openAddItem() {
+  ensureJob();
+  ITEM_SHEET.editIdx = null;
+  ITEM_SHEET.qty = 1;
+  resetSheet();
+  populateCollectionSelect();
+  document.getElementById('sheet-title').textContent = 'Add item';
+  document.getElementById('item-delete-btn').style.display = 'none';
+  showSheet();
+}
+
+function openEditItem(i) {
+  const job = getJob();
+  const idx = parseInt(document.getElementById('items-room-select').value);
+  const room = job.rooms[idx];
+  const it = room.itemObjs[i];
+  ITEM_SHEET.editIdx = i;
+  ITEM_SHEET.qty = it.qty || 1;
+  resetSheet();
+  populateCollectionSelect();
+
+  document.getElementById('sheet-title').textContent = 'Edit item';
+  document.getElementById('item-name').value = it.name || '';
+  document.getElementById('item-qty-display').textContent = ITEM_SHEET.qty;
+  document.getElementById('item-notes').value = it.notes || '';
+
+  document.querySelectorAll('#item-category-chips .chip').forEach(c => c.classList.toggle('on', c.dataset.cat === (it.cat||'furniture')));
+  document.querySelectorAll('#item-size-chips .chip').forEach(c => c.classList.toggle('on', c.dataset.size === (it.size||'s')));
+  if (!it.size) document.getElementById('item-vol-custom').value = it.vol || '';
+  document.querySelectorAll('#item-condition-chips .chip').forEach(c => c.classList.toggle('on', c.dataset.cond === (it.cond||'good')));
+  const flags = it.flags || [];
+  document.querySelectorAll('#item-flags-chips .chip').forEach(c => c.classList.toggle('on', flags.includes(c.dataset.flag)));
+
+  // Collection attribution
+  const collSel = document.getElementById('item-collection-select');
+  if (it.collectionIdx !== undefined && it.collectionIdx !== null && it.collectionIdx !== '') {
+    collSel.value = String(it.collectionIdx);
+  }
+  toggleCountInWrap();
+  const ci = it.countIn || 'both';
+  document.querySelectorAll('#item-countin-wrap .attr-chip').forEach(b => b.classList.toggle('on', b.dataset.ci === ci));
+
+  document.getElementById('item-delete-btn').style.display = 'flex';
+  showSheet();
+}
+
+function showSheet() {
+  document.getElementById('item-sheet-backdrop').style.display = 'block';
+  document.getElementById('item-sheet').style.display = 'block';
+  setTimeout(() => document.getElementById('item-name').focus(), 80);
+}
+
+function closeItemSheet() {
+  document.getElementById('item-sheet-backdrop').style.display = 'none';
+  document.getElementById('item-sheet').style.display = 'none';
+}
+
+function resetSheet() {
+  document.getElementById('item-name').value = '';
+  document.getElementById('item-vol-custom').value = '';
+  document.getElementById('item-notes').value = '';
+  document.getElementById('item-qty-display').textContent = '1';
+  document.querySelectorAll('#item-category-chips .chip').forEach(c => c.classList.toggle('on', c.dataset.cat==='furniture'));
+  document.querySelectorAll('#item-size-chips .chip').forEach(c => c.classList.toggle('on', c.dataset.size==='s'));
+  document.querySelectorAll('#item-condition-chips .chip').forEach(c => c.classList.toggle('on', c.dataset.cond==='good'));
+  document.querySelectorAll('#item-flags-chips .chip').forEach(c => c.classList.remove('on'));
+  document.getElementById('item-collection-select').value = '';
+  document.getElementById('item-countin-wrap').style.display = 'none';
+  document.querySelectorAll('#item-countin-wrap .attr-chip').forEach(b => b.classList.toggle('on', b.dataset.ci==='both'));
+}
+
+// ── SAVE ITEM ──
+function saveItem() {
+  const name = document.getElementById('item-name').value.trim();
+  if (!name) { toast('Please enter an item name'); return; }
+
+  const cat = document.querySelector('#item-category-chips .chip.on')?.dataset.cat || 'other';
+  const sizeChip = document.querySelector('#item-size-chips .chip.on');
+  const customVol = parseFloat(document.getElementById('item-vol-custom').value);
+  const vol = !isNaN(customVol) && customVol > 0 ? customVol : parseFloat(sizeChip?.dataset.vol || '0.2');
+  const size = isNaN(customVol) || customVol <= 0 ? (sizeChip?.dataset.size || 's') : null;
+  const cond = document.querySelector('#item-condition-chips .chip.on')?.dataset.cond || 'good';
+  const flags = [...document.querySelectorAll('#item-flags-chips .chip.on')].map(c => c.dataset.flag);
+  const notes = document.getElementById('item-notes').value.trim();
+  const qty = ITEM_SHEET.qty;
+
+  // Collection attribution
+  const collSelVal = document.getElementById('item-collection-select').value;
+  const collectionIdx = collSelVal !== '' ? parseInt(collSelVal) : null;
+  const countIn = document.querySelector('#item-countin-wrap .attr-chip.on')?.dataset.ci || 'both';
+
+  const job = getJob();
+  const roomIdx = parseInt(document.getElementById('items-room-select').value);
+  const room = job.rooms[roomIdx];
+  if (!room.itemObjs) room.itemObjs = [];
+
+  const itemObj = { name, cat, size, vol, cond, flags, notes, qty, collectionIdx, countIn, added: new Date().toISOString() };
+
+  if (ITEM_SHEET.editIdx !== null) {
+    room.itemObjs[ITEM_SHEET.editIdx] = itemObj;
+    toast(`"${name}" updated`);
+  } else {
+    room.itemObjs.push(itemObj);
+    toast(`"${name}" added`);
+  }
+
+  // Auto-flag to handling
+  if (flags.includes('fragile') || flags.includes('crated') || cat === 'specialist') {
+    if (!job.handling) job.handling = [];
+    if (!job.handling.find(h => h.name === name)) {
+      const tag = cat === 'specialist' ? 'Specialist' : flags.includes('crated') ? 'Crated' : 'Fragile';
+      const tagCls = tag === 'Specialist' ? 'htag-special' : tag === 'Crated' ? 'htag-crate' : 'htag-fragile';
+      job.handling.push({ name, tag, tagCls, note: notes || 'Auto-flagged from item catalogue' });
+    }
+  }
+
+  closeItemSheet();
+  renderItemsList();
+}
+
+// ── DELETE ITEM ──
+function deleteItem() {
+  const job = getJob();
+  const roomIdx = parseInt(document.getElementById('items-room-select').value);
+  const room = job.rooms[roomIdx];
+  const i = ITEM_SHEET.editIdx;
+  if (i === null || !room.itemObjs[i]) return;
+  const name = room.itemObjs[i].name;
+  if (!confirm(`Delete "${name}"?`)) return;
+  room.itemObjs.splice(i, 1);
+  closeItemSheet();
+  renderItemsList();
+  toast(`"${name}" removed`);
+}
+
+// ── PROMPT STAMP PHOTO — opens stamp overlay for a selected image ──
+function promptStampPhoto() {
+  const job = getJob();
+  const roomIdx = parseInt(document.getElementById('items-room-select').value);
+  const room = job?.rooms[roomIdx];
+  // Try to find a photo from the room's wide shots, else show a placeholder
+  const photos = room?.photos?.wide || [];
+  if (photos.length) {
+    closeItemSheet();
+    openStampOverlay(photos[0]);
+  } else if (STATE.scanImageData) {
+    closeItemSheet();
+    openStampOverlay(STATE.scanImageData);
+  } else {
+    toast('No photo available for this room yet — scan or capture a photo first');
+  }
+}
+
+
 function toast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg;
@@ -1545,6 +2458,8 @@ if ('serviceWorker' in navigator) {
 load();
 updateHeader();
 renderRooms();
+renderItemsScreen();
+renderCollections();
 updateScore();
 </script>
 </body>
